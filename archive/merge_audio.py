@@ -4,16 +4,17 @@ Concatenates individual clips into a single sequential conversation.
 Adds natural pauses between speakers using personality-aware sampling.
 """
 
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import os
-import yaml
 import subprocess
 from personality_sampler import sample_conversation_pause
-
-
-def load_config(config_path: str = "config.yaml") -> dict:
-    """Load configuration from YAML file."""
-    with open(config_path, 'r') as f:
-        return yaml.safe_load(f)
+from src.utils.config_loader import load_config
 
 
 def merge_audio_clips(config_path: str = "config.yaml"):

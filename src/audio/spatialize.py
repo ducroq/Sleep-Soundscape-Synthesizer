@@ -5,7 +5,6 @@ Generates the final immersive sleep soundscape.
 """
 
 import os
-import yaml
 import subprocess
 from typing import List, Tuple
 from src.utils.config_loader import load_config

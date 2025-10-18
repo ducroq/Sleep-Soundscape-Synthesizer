@@ -4,6 +4,14 @@
 # ElevenLabs API Settings
 elevenlabs:
   model_id: "eleven_multilingual_v2"  # API key stored in secrets.ini
+  api_url: "https://api.elevenlabs.io/v1/text-to-speech"  # Base API endpoint
+
+  # Voice settings (previously hardcoded in tts.py)
+  voice_settings:
+    stability: 0.5           # 0.0-1.0, higher = more consistent
+    similarity_boost: 0.75   # 0.0-1.0, higher = closer to original voice
+    style: 0.0               # 0.0-1.0, exaggeration level
+    use_speaker_boost: true  # Enable speaker boost
 
 # Voice IDs
 voices:
@@ -24,6 +32,26 @@ language:
   max_phrase_length: 12
   min_word_length: 2
   max_word_length: 5
+
+  # Phoneme definitions (previously hardcoded in generate_language.py)
+  phonemes:
+    soft_consonants: ['l', 'm', 'n', 'r', 'v', 'j', 'w']
+    medium_consonants: ['b', 'd', 'f', 's', 'z']
+    hard_consonants: ['p', 't', 'k', 'g', 'ch', 'sh']
+    vowels: ['a', 'e', 'i', 'o', 'u', 'ai', 'au', 'ea', 'ia', 'io']
+
+  # Syllable structure probabilities (previously hardcoded in generate_language.py)
+  syllable_structure:
+    onset_probability: 0.7       # 70% chance of initial consonant
+    onset_first_syllable: 1.0    # First syllable always has onset (100%)
+    coda_probability: 0.3        # 30% chance of final consonant
+
+  # Consonant weighting (previously hardcoded in generate_language.py)
+  # Controls how softness parameter affects consonant distribution
+  consonant_weighting:
+    soft_ratio: 1.0      # Multiplier for soft consonants (always full weight)
+    medium_ratio: 0.6    # Multiplier for medium consonants when softness=0
+    hard_ratio: 0.4      # Multiplier for hard consonants when softness=0
 
 # Probabilistic Prosody Distributions
 prosody_distributions:
@@ -70,6 +98,7 @@ breaks:
     std: 0.1
     min: 0.1
     max: 0.6
+    probability: 0.2  # 20% chance of micro pause between words (previously hardcoded in generate_ssml.py)
   
   comma_pause:       # Natural comma pauses
     mean: 0.4
@@ -98,20 +127,30 @@ emphasis:
   levels: ["moderate", "strong", "reduced"]
   level_weights: [0.6, 0.2, 0.2]   # Probabilities for each level
 
+# Utterance Type Probabilities (previously hardcoded in generate_language.py)
+# Determines the distribution of different utterance types
+# Note: Must sum to 1.0
+utterance_type_probabilities:
+  thinking: 0.05    # 5% thinking sounds (hmm, uh, um)
+  agreement: 0.10   # 10% agreement sounds (mm-hmm, yeah) - cumulative: 15%
+  laughter: 0.05    # 5% laughter sounds (haha, hehe) - cumulative: 20%
+  question: 0.15    # 15% questions (rising intonation) - cumulative: 35%
+  normal: 0.65      # 65% normal statements (remaining)
+
 # Special Prosody for Utterance Types
 utterance_types:
   question:
     pitch_boost: 15        # Questions get higher pitch
     rate_factor: 1.05      # Slightly faster
-  
+
   agreement:
     volume: "soft"
     rate_factor: 0.9       # Slightly slower
-  
+
   thinking:
     rate_factor: 0.85      # Slower, contemplative
     pause_before: 0.6      # Pause before thinking sounds
-  
+
   laughter:
     volume: "soft"
     rate_factor: 1.1       # Slightly faster

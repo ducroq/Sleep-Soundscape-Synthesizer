@@ -76,20 +76,30 @@ api_key = your_elevenlabs_api_key_here
 
 ### 3. Generate Soundscape
 
-**Note:** Currently using individual module scripts. The unified `main.py` pipeline is coming in Phase 2!
+**Option A: Using Archive Scripts (Legacy - Simpler)**
 
 ```bash
-# For now, modules must be run from the archive/ directory
-# (Phase 2 will add a unified pipeline)
-
+# From project root
 cd archive
-python generate_soundscape.py  # Generate clips
-python merge_audio.py          # Merge into conversation
-python spatialize_audio.py     # Create 3D soundscape
+python generate_soundscape.py  # Generate clips (1-2 min)
+python merge_audio.py          # Merge into conversation (1 sec)
+python spatialize_audio.py     # Create 3D soundscape (10 sec)
 cd ..
 ```
 
-**Coming soon:** `python -m src.pipeline.main` to run all stages automatically!
+**Option B: Using New Modular Structure (Recommended for Development)**
+
+```bash
+# From project root - using new src/ modules
+python -c "from src.generation import language, ssml, personality; from src.audio import tts"
+
+# Or run individual module tests:
+python src/utils/config_loader.py      # Test config loading
+python tests/test_personalities.py     # Test personality system
+python tests/test_exact_flow.py        # Test full pipeline flow
+```
+
+**Coming in Phase 2:** `python -m src.pipeline.main` to run all stages automatically!
 
 ### Output Files
 
@@ -384,14 +394,20 @@ speaker_personality_distributions:
 ### Testing Individual Modules
 
 ```bash
+# Test config loader with validation
+python src/utils/config_loader.py
+
 # Test language generation
-python generate_language.py
+python src/generation/language.py
 
 # Test SSML generation
-python generate_ssml.py
+python src/generation/ssml.py
 
 # Test TTS (requires API key)
-python tts.py
+python src/audio/tts.py
+
+# Run pytest tests
+python -m pytest tests/ -v
 ```
 
 ### Generating Multiple Variants

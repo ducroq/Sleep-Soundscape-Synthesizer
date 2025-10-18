@@ -4,29 +4,20 @@ Orchestrates the entire pipeline: language generation → SSML → TTS
 Now with probabilistic speaker personalities!
 """
 
-import os
-import yaml
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import random
 from typing import Dict, List
 from generate_language import LanguageGenerator, generate_utterance
 from generate_ssml import generate_ssml
 from tts import generate_speech
 from personality_sampler import initialize_speaker_personalities, SpeakerPersonality
-
-
-def load_config(config_path: str = "config.yaml") -> dict:
-    """Load configuration from YAML file."""
-    with open(config_path, 'r') as f:
-        return yaml.safe_load(f)
-
-
-def ensure_output_dirs(config: dict):
-    """Create output directories if they don't exist."""
-    output_dir = config['paths']['output_dir']
-    clips_dir = config['paths']['clips_dir']
-    
-    os.makedirs(output_dir, exist_ok=True)
-    os.makedirs(clips_dir, exist_ok=True)
+from src.utils.config_loader import load_config, ensure_output_dirs
 
 
 def generate_soundscape(config_path: str = "config.yaml"):

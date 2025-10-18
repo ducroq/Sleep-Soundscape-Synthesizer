@@ -2,20 +2,23 @@
 Debug Script - Check what's being sent to ElevenLabs API
 """
 
-import configparser
-import yaml
-from generate_language import LanguageGenerator, generate_utterance
-from generate_ssml import generate_ssml
-from personality_sampler import initialize_speaker_personalities
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+from src.generation.language import LanguageGenerator, generate_utterance
+from src.generation.ssml import generate_ssml
+from src.generation.personality import initialize_speaker_personalities
+from src.utils.config_loader import load_config, get_elevenlabs_api_key
 
 # Load config
-with open('config.yaml', 'r') as f:
-    config = yaml.safe_load(f)
+config = load_config()
 
 # Get API key
-secrets = configparser.ConfigParser()
-secrets.read('secrets.ini')
-api_key = secrets.get('elevenlabs', 'api_key')
+api_key = get_elevenlabs_api_key()
 
 print("=" * 70)
 print("DEBUG: What's being sent to ElevenLabs?")

@@ -7,7 +7,7 @@ import os
 import configparser
 import requests
 import subprocess
-from typing import Optional
+from typing import Optional, Dict, Any
 
 
 def call_elevenlabs_tts(
@@ -19,11 +19,12 @@ def call_elevenlabs_tts(
     stability: float = 0.5,
     similarity_boost: float = 0.75,
     style: float = 0.0,
-    use_speaker_boost: bool = True
+    use_speaker_boost: bool = True,
+    config: Optional[Dict[str, Any]] = None
 ) -> bytes:
     """
     Call ElevenLabs TTS API to generate speech.
-    
+
     Args:
         text: Text or SSML to synthesize
         voice_id: ElevenLabs voice ID
@@ -34,14 +35,21 @@ def call_elevenlabs_tts(
         similarity_boost: Similarity boost (0.0-1.0)
         style: Style exaggeration (0.0-1.0)
         use_speaker_boost: Enable speaker boost
-    
+        config: Optional configuration dictionary
+
     Returns:
         Raw audio bytes (MP3)
-    
+
     Raises:
         Exception: If API call fails
     """
-    url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
+    # Get API URL from config or use default
+    if config:
+        api_url = config.get('elevenlabs', {}).get('api_url', 'https://api.elevenlabs.io/v1/text-to-speech')
+    else:
+        api_url = 'https://api.elevenlabs.io/v1/text-to-speech'
+
+    url = f"{api_url}/{voice_id}"
     
     headers = {
         "Accept": "audio/mpeg",
@@ -169,12 +177,14 @@ def generate_speech(
     # Get model settings
     model_id = config['elevenlabs'].get('model_id', 'eleven_multilingual_v2')
     output_format = config['audio'].get('output_format', 'mp3_44100_128')
-    
-    # Use default voice settings - SSML handles prosody
-    stability = 0.5
-    similarity_boost = 0.75
-    style = 0.0
-    
+
+    # Get voice settings from config or use defaults
+    voice_settings = config.get('elevenlabs', {}).get('voice_settings', {})
+    stability = voice_settings.get('stability', 0.5)
+    similarity_boost = voice_settings.get('similarity_boost', 0.75)
+    style = voice_settings.get('style', 0.0)
+    use_speaker_boost = voice_settings.get('use_speaker_boost', True)
+
     # Call API
     audio_bytes = call_elevenlabs_tts(
         text=text,
@@ -184,7 +194,9 @@ def generate_speech(
         output_format=output_format,
         stability=stability,
         similarity_boost=similarity_boost,
-        style=style
+        style=style,
+        use_speaker_boost=use_speaker_boost,
+        config=config
     )
     
     # Apply fading if requested (disabled by default - causes audio corruption)

@@ -3,34 +3,43 @@ Test Script for Personality System
 Verifies that personalities are sampled correctly and show variation.
 """
 
-import yaml
-from personality_sampler import initialize_speaker_personalities, SpeakerPersonality
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
+from src.generation.personality import initialize_speaker_personalities, SpeakerPersonality
+from src.utils.config_loader import load_config
 
 
 def test_personality_system():
     """Test the personality sampling system."""
-    
+
     print("=" * 70)
     print("Testing Probabilistic Personality System")
     print("=" * 70)
-    
+
     # Load config
     print("\n[1/3] Loading configuration...")
     try:
-        with open('config.yaml', 'r') as f:
-            config = yaml.safe_load(f)
-        print("  ✓ Config loaded successfully")
+        config = load_config()
+        print("  [OK] Config loaded successfully")
     except FileNotFoundError:
-        print("  ✗ Error: config.yaml not found")
+        print("  [FAIL] Error: config.yaml not found")
         return
-    
+    except ValueError as e:
+        print(f"  [FAIL] Config validation error: {e}")
+        return
+
     # Get voices
     voices = config.get('voices', [])
     if not voices:
-        print("  ✗ Error: No voices in config")
+        print("  [FAIL] Error: No voices in config")
         return
-    
-    print(f"  ✓ Found {len(voices)} voices")
+
+    print(f"  [OK] Found {len(voices)} voices")
     
     # Initialize personalities
     print("\n[2/3] Sampling speaker personalities...")
@@ -100,8 +109,8 @@ def test_personality_system():
     print(f"    Verbosity: {min(all_verbosity):.2f} - {max(all_verbosity):.2f}")
     print(f"    Rate:      {min(all_rates):.2f} - {max(all_rates):.2f}")
     print(f"    Pitch:     {min(all_pitches):.1f}% - {max(all_pitches):.1f}%")
-    
-    print(f"\n  ✓ All tests passed!")
+
+    print(f"\n  [OK] All tests passed!")
     print(f"  The personality system is working correctly.\n")
     print("=" * 70)
 

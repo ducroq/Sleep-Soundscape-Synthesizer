@@ -5,7 +5,6 @@ Adds natural pauses between speakers using personality-aware sampling.
 """
 
 import os
-import yaml
 import subprocess
 from src.generation.personality import sample_conversation_pause
 from src.utils.config_loader import load_config

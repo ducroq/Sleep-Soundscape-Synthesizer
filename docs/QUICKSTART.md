@@ -13,9 +13,18 @@
    ```
    If not installed, download from: https://ffmpeg.org/download.html
 
-## Generate Your Soundscape (3 Commands)
+3. **Create API key file:**
+   ```bash
+   # Create config/secrets.ini with your ElevenLabs API key
+   # (copy from config/secrets.ini.example and fill in your key)
+   ```
+
+## Generate Your Soundscape (Option A: Archive Scripts - Easiest)
 
 ```bash
+# From project root
+cd archive
+
 # Step 1: Generate clips with personalities (1-2 minutes)
 python generate_soundscape.py
 
@@ -24,6 +33,22 @@ python merge_audio.py
 
 # Step 3: Create 3D soundscape (10 seconds)
 python spatialize_audio.py
+
+cd ..
+```
+
+## Generate Your Soundscape (Option B: New Modular Structure)
+
+```bash
+# From project root
+
+# Test the system first
+python src/utils/config_loader.py      # Verify config loads
+python tests/test_personalities.py     # Test personality system
+python tests/test_exact_flow.py        # Test full pipeline
+
+# Then use archive scripts (Option A above) to generate actual soundscape
+# (Unified pipeline coming in Phase 2!)
 ```
 
 ## Your Files
@@ -35,51 +60,83 @@ python spatialize_audio.py
 ## Test the System
 
 ```bash
-# Verify personalities are working
-python test_personalities.py
+# Run pytest test suite
+python -m pytest tests/ -v
 
-# Test language generation
-python generate_language.py
+# Test individual modules
+python src/utils/config_loader.py      # Config loading + validation
+python src/generation/language.py      # Language generation
+python src/generation/ssml.py          # SSML generation
+python src/generation/personality.py   # Personality sampling
+python src/audio/tts.py                # TTS integration
 
-# Test SSML generation
-python generate_ssml.py
+# Test scripts
+python tests/test_personalities.py     # Personality system
+python tests/test_tts.py              # TTS integration
+python tests/test_ssml_compatibility.py  # SSML features
+python tests/test_exact_flow.py        # Full pipeline
 ```
 
 ## Customize (Optional)
 
-Edit `config.yaml`:
+Edit `config/config.yaml`:
 
-- **More clips:** Change `num_clips: 20` to `num_clips: 50`
-- **More talkative:** Increase `verbosity.mean` to `1.2`
-- **More pauses:** Increase `pause_distribution.mean` to `2.0`
-- **More layers:** Increase `num_layers` to `5`
+```yaml
+# Make speakers more varied
+prosody_distributions:
+  rate:
+    per_speaker_variation: 0.15  # (was 0.10)
 
-## Common Issues
+# Make speakers more talkative
+speaker_personality_distributions:
+  verbosity:
+    mean: 1.2  # (was 1.0)
+    max: 1.6   # (was 1.4)
 
-**"API key not found"**
-→ Make sure environment variable is set in current terminal session
+# Longer pauses between speakers
+conversation:
+  pause_distribution:
+    mean: 2.0  # (was 1.2)
+
+# More conversation layers
+spatialization:
+  num_layers: 5  # (was 3)
+```
+
+## Troubleshooting
+
+**"ElevenLabs API key not found"**
+- Make sure `config/secrets.ini` exists with your API key
+- Copy from `config/secrets.ini.example` if needed
 
 **"ffmpeg: command not found"**
-→ Install ffmpeg and add to PATH
+- Install ffmpeg and add to PATH
+- Windows: Download from ffmpeg.org, add to PATH
+- Mac: `brew install ffmpeg`
+- Linux: `sudo apt-get install ffmpeg`
 
-**"No clips found"**
-→ Run `generate_soundscape.py` first
+**"Configuration file is missing required sections"**
+- Run `python src/utils/config_loader.py` to see detailed validation errors
+- Make sure `config/config.yaml` has all required sections
 
-**Clips sound too similar**
-→ Increase `per_speaker_variation` values in config
+**Import errors**
+- Run tests from project root directory
+- Make sure you have Python 3.10+ installed
+- Reinstall dependencies: `pip install -r requirements.txt`
 
-## What's Different from Basic Version?
+## What's New (Phase 1 Complete)
 
-✨ **Probabilistic Personalities**: Each voice now has:
-- Unique laughter frequency (some laugh more than others)
-- Unique agreement frequency (some say "mm-hmm" more)
-- Unique verbosity (some talk more/less)
-- Unique pause tendency (some pause more/less)
-- Unique baseline rate and pitch
-- Natural per-utterance variation
+✅ **Modular Structure** - All code organized in `src/` directory
+✅ **Config Validation** - Comprehensive validation with helpful error messages
+✅ **Centralized Config** - All settings in `config/config.yaml`
+✅ **Better Testing** - Run `python -m pytest tests/ -v`
+✅ **Documentation** - Complete guides for all modules
 
-Result: Each speaker sounds like a **consistent, distinct person** with natural variation!
+## Next: Phase 2 (Coming Soon)
 
----
+**Unified Pipeline** - Single command to run everything:
+```bash
+python -m src.pipeline.main  # One command for the full pipeline!
+```
 
-That's it! You now have a sophisticated sleep soundscape with realistic speaker personalities. 😴✨
+For now, use the archive scripts (Option A above) to generate soundscapes.

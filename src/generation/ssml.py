@@ -67,28 +67,32 @@ def add_emphasis_to_text(text: str, personality: SpeakerPersonality) -> str:
 def add_pauses_to_text(text: str, personality: SpeakerPersonality) -> str:
     """
     Add break tags at natural pause points (commas, between phrases).
-    
+
     Args:
         text: The text to add pauses to
         personality: Speaker's personality object
-    
+
     Returns:
         Text with break tags
     """
+    # Get micro pause probability from config or use default
+    micro_pause_config = personality.config.get('breaks', {}).get('micro_pause', {})
+    micro_pause_probability = micro_pause_config.get('probability', 0.2)
+
     # Add micro pauses between some words
     words = text.split()
     if len(words) <= 2:
         return text
-    
+
     result = []
     for i, word in enumerate(words):
         result.append(word)
-        
+
         # Add occasional micro pauses (not after last word)
-        if i < len(words) - 1 and random.random() < 0.2:
+        if i < len(words) - 1 and random.random() < micro_pause_probability:
             pause_duration = personality.sample_pause('micro_pause')
             result.append(f'<break time="{pause_duration:.1f}s"/>')
-    
+
     return " ".join(result)
 
 

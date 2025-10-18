@@ -3,18 +3,21 @@ SSML Compatibility Test
 Tests different SSML formats to find what works
 """
 
-import configparser
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import requests
-import yaml
+from src.utils.config_loader import load_config, get_elevenlabs_api_key
 
 # Load config
-with open('config.yaml', 'r') as f:
-    config = yaml.safe_load(f)
+config = load_config()
 
 # Get API key
-secrets = configparser.ConfigParser()
-secrets.read('secrets.ini')
-api_key = secrets.get('elevenlabs', 'api_key')
+api_key = get_elevenlabs_api_key()
 
 voice_id = config['voices'][0]
 url = f"https://api.elevenlabs.io/v1/text-to-speech/{voice_id}"
@@ -102,10 +105,10 @@ for i, test in enumerate(tests):
             filename = f"test_{i+1:02d}.mp3"
             with open(filename, 'wb') as f:
                 f.write(response.content)
-            
-            print(f"  ✓ Status: {response.status_code}")
-            print(f"  ✓ Audio size: {audio_size:,} bytes")
-            print(f"  ✓ Saved to: {filename}")
+
+            print(f"  [OK] Status: {response.status_code}")
+            print(f"  [OK] Audio size: {audio_size:,} bytes")
+            print(f"  [OK] Saved to: {filename}")
             
             results.append({
                 "test": test['name'],
@@ -114,8 +117,8 @@ for i, test in enumerate(tests):
                 "file": filename
             })
         else:
-            print(f"  ✗ ERROR: Status {response.status_code}")
-            print(f"  ✗ Response: {response.text[:200]}")
+            print(f"  [FAIL] ERROR: Status {response.status_code}")
+            print(f"  [FAIL] Response: {response.text[:200]}")
             results.append({
                 "test": test['name'],
                 "status": "FAILED",
@@ -123,7 +126,7 @@ for i, test in enumerate(tests):
             })
     
     except Exception as e:
-        print(f"  ✗ EXCEPTION: {e}")
+        print(f"  [ERROR] EXCEPTION: {e}")
         results.append({
             "test": test['name'],
             "status": "EXCEPTION",

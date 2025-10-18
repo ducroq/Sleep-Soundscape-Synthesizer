@@ -3,24 +3,30 @@ Test Exact Generate Soundscape Flow
 Mimics exactly what generate_soundscape.py does
 """
 
-import yaml
-from generate_language import LanguageGenerator, generate_utterance
-from generate_ssml import generate_ssml
-from personality_sampler import initialize_speaker_personalities
-from tts import generate_speech
+import sys
+from pathlib import Path
+
+# Add project root to path
+project_root = Path(__file__).parent.parent
+sys.path.insert(0, str(project_root))
+
 import random
+from src.generation.language import LanguageGenerator, generate_utterance
+from src.generation.ssml import generate_ssml
+from src.generation.personality import initialize_speaker_personalities
+from src.audio.tts import generate_speech
+from src.utils.config_loader import load_config
 
 print("=" * 70)
 print("Testing EXACT generate_soundscape.py flow")
 print("=" * 70)
 
 # Load config
-with open('config.yaml', 'r') as f:
-    config = yaml.safe_load(f)
+config = load_config()
 
 # Initialize language generator
 print("\n[1] Initializing language generator...")
-lang_gen = LanguageGenerator(softness=config['language']['softness'])
+lang_gen = LanguageGenerator(softness=config['language']['softness'], config=config)
 
 # Initialize personalities
 print("[2] Initializing personalities...")
