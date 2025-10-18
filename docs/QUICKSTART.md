@@ -19,41 +19,42 @@
    # (copy from config/secrets.ini.example and fill in your key)
    ```
 
-## Generate Your Soundscape (Option A: Archive Scripts - Legacy)
+## Generate Your Soundscape
 
-**Note:** These scripts are frozen for backward compatibility. For new development, use the modular src/ structure (Option B).
+**✨ NEW: Unified Pipeline (Recommended)**
+
+```bash
+# From project root - one command does everything!
+python -m src.pipeline.main
+
+# This will:
+# 1. Generate audio clips with personalities (1-2 minutes)
+# 2. Merge clips into sequential conversation (1 second)
+# 3. Create 3D spatialized soundscape (10 seconds)
+
+# Custom options:
+python -m src.pipeline.main --clips 30          # Generate 30 clips
+python -m src.pipeline.main --skip-merge        # Only generate clips
+python -m src.pipeline.main --skip-spatial      # Skip 3D (just merge)
+
+# See all options:
+python -m src.pipeline.main --help
+```
+
+## Alternative: Archive Scripts (Legacy)
+
+**Note:** These scripts are frozen for backward compatibility. Use the unified pipeline above.
 
 ```bash
 # From project root
 cd archive
-
-# Step 1: Generate clips with personalities (1-2 minutes)
-python generate_soundscape.py
-
-# Step 2: Merge clips into conversation (1 second)
-python merge_audio.py
-
-# Step 3: Create 3D soundscape (10 seconds)
-python spatialize_audio.py
-
+python generate_soundscape.py  # Generate clips (1-2 minutes)
+python merge_audio.py          # Merge into conversation (1 second)
+python spatialize_audio.py     # Create 3D soundscape (10 seconds)
 cd ..
 ```
 
 See [archive/README.md](../archive/README.md) for more information about the legacy scripts.
-
-## Generate Your Soundscape (Option B: New Modular Structure)
-
-```bash
-# From project root
-
-# Test the system first
-python src/utils/config_loader.py      # Verify config loads
-python tests/test_personalities.py     # Test personality system
-python tests/test_exact_flow.py        # Test full pipeline
-
-# Then use archive scripts (Option A above) to generate actual soundscape
-# (Unified pipeline coming in Phase 2!)
-```
 
 ## Your Files
 
@@ -136,11 +137,3 @@ spatialization:
 ✅ **Better Testing** - Run `python -m pytest tests/ -v`
 ✅ **Documentation** - Complete guides for all modules
 
-## Next: Phase 2 (Coming Soon)
-
-**Unified Pipeline** - Single command to run everything:
-```bash
-python -m src.pipeline.main  # One command for the full pipeline!
-```
-
-For now, use the archive scripts (Option A above) to generate soundscapes.

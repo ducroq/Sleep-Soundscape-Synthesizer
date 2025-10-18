@@ -76,9 +76,24 @@ api_key = your_elevenlabs_api_key_here
 
 ### 3. Generate Soundscape
 
-**Option A: Using Archive Scripts (Legacy)**
+**✨ NEW: Unified Pipeline (Recommended)**
 
-**Note:** These scripts are frozen for backward compatibility. For new development, use the modular src/ structure.
+```bash
+# From project root - one command for everything!
+python -m src.pipeline.main
+
+# With custom options:
+python -m src.pipeline.main --clips 30          # Generate 30 clips
+python -m src.pipeline.main --skip-merge        # Only generate clips
+python -m src.pipeline.main --skip-spatial      # Generate + merge (no 3D)
+
+# See all options:
+python -m src.pipeline.main --help
+```
+
+**Option B: Using Archive Scripts (Legacy)**
+
+**Note:** These scripts are frozen for backward compatibility. Use the unified pipeline above for new work.
 
 ```bash
 # From project root
@@ -90,20 +105,6 @@ cd ..
 ```
 
 See [archive/README.md](archive/README.md) for more details.
-
-**Option B: Using New Modular Structure (Recommended)**
-
-```bash
-# From project root - using new src/ modules
-python -c "from src.generation import language, ssml, personality; from src.audio import tts"
-
-# Or run individual module tests:
-python src/utils/config_loader.py      # Test config loading
-python tests/test_personalities.py     # Test personality system
-python tests/test_exact_flow.py        # Test full pipeline flow
-```
-
-**Coming in Phase 2:** `python -m src.pipeline.main` to run all stages automatically!
 
 ### Output Files
 

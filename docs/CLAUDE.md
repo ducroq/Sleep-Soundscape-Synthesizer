@@ -10,9 +10,22 @@ Sleep Soundscape Synthesizer creates continuous background chatter in an invente
 
 ### Generate Soundscape (Full Pipeline)
 
+**✨ Unified Pipeline (Recommended):**
+
+```bash
+# From project root - one command for everything!
+python -m src.pipeline.main
+
+# With options:
+python -m src.pipeline.main --clips 30          # Generate 30 clips
+python -m src.pipeline.main --skip-merge        # Only generate clips
+python -m src.pipeline.main --skip-spatial      # Skip 3D (just merge)
+python -m src.pipeline.main --help              # See all options
+```
+
 **Using Archive Scripts (Legacy - Frozen):**
 
-**Note:** Archive scripts are frozen for backward compatibility. Use src/ modules for new development.
+**Note:** Archive scripts are frozen for backward compatibility. Use the unified pipeline above.
 
 ```bash
 # From project root
@@ -24,18 +37,6 @@ cd ..
 ```
 
 See [archive/README.md](../archive/README.md) for more information.
-
-**Using New Modular Structure:**
-```bash
-# Config loader tests all modules
-python src/utils/config_loader.py
-
-# Test personality system
-python tests/test_personalities.py
-
-# Test exact pipeline flow
-python tests/test_exact_flow.py
-```
 
 ### Run Tests
 ```bash
@@ -279,17 +280,26 @@ See these docs for details:
 - `docs/SSML_MODULE_UPDATE.md` - SSML module details
 - `docs/TTS_MODULE_UPDATE.md` - TTS module details
 
-## Next Steps (Phase 2 - Planned)
+## Recent Changes (Phase 2 Complete)
 
-**Create `src/pipeline/main.py`** - Unified pipeline orchestrator:
-- Single entry point for entire workflow
-- Replace archive scripts with modular pipeline
-- Improved logging and error handling
-- Command: `python -m src.pipeline.main`
+✅ **Unified Pipeline** - Single command workflow
+✅ **Modular Architecture** - Clean separation: clip generation, merging, spatialization
+✅ **CLI Interface** - Rich command-line options (--clips, --skip-merge, --skip-spatial, etc.)
+✅ **Better Error Handling** - Clear exceptions and error messages
+✅ **Progress Tracking** - Verbose output shows each pipeline stage
 
-This will consolidate:
-- `archive/generate_soundscape.py`
-- `archive/merge_audio.py`
-- `archive/spatialize_audio.py`
+The pipeline consolidates:
+- `archive/generate_soundscape.py` → `src/pipeline/clip_generator.py`
+- `archive/merge_audio.py` → `src/audio/merge.py` (with merge_clips() wrapper)
+- `archive/spatialize_audio.py` → `src/audio/spatialize.py` (with create_spatial_soundscape() wrapper)
 
-Into a single unified pipeline with better modularity and control flow.
+Into a single unified workflow: `python -m src.pipeline.main`
+
+## Future Enhancements
+
+Potential improvements for future phases:
+- Real-time generation mode
+- Web interface for parameter tuning
+- Emotion distributions (happy, tired, excited speakers)
+- Background ambience mixing (café sounds, rain, etc.)
+- Dynamic pitch contours
