@@ -1,0 +1,173 @@
+# Sleep Soundscape Synthesizer Configuration
+# Enhanced with Probabilistic Speaker Personalities
+
+# ElevenLabs API Settings
+elevenlabs:
+  model_id: "eleven_multilingual_v2"  # API key stored in secrets.ini
+
+# Voice IDs
+voices:
+  - "21m00Tcm4TlvDq8ikWAM"  # Rachel
+  - "AZnzlk1XvdvUeBnXmlld"  # Domi
+  - "EXAVITQu4vr4xnSDxMaL"  # Bella
+  - "ErXwobaYiN019PkySvjV"  # Antoni
+  - "MF3mGyEYCl7XYWbV9V6O"  # Elli
+  - "TxGEqnHWrfWFTfGW9XjX"  # Josh
+  - "VR6AewLTigWG4xSOukaG"  # Arnold
+  - "pNInz6obpgDQGcFmaJgB"  # Adam
+  - "yoZ06aMxZJJ28mfd3POQ"  # Sam
+
+# Language Generation Settings
+language:
+  softness: 0.7  # 0.0-1.0, controls phoneme selection (higher = softer sounds)
+  min_phrase_length: 3
+  max_phrase_length: 12
+  min_word_length: 2
+  max_word_length: 5
+
+# Probabilistic Prosody Distributions
+prosody_distributions:
+  rate:
+    base_mean: 0.85               # Center point for all speakers
+    per_speaker_variation: 0.10   # How different speakers are from each other
+    per_utterance_variation: 0.03 # How much one speaker varies per utterance
+    min: 0.70
+    max: 1.00
+  
+  pitch:
+    base: "medium"                # Base reference
+    per_speaker_variation: 8      # ±8% per speaker from base
+    per_utterance_variation: 3    # ±3% per utterance variation
+    min: -15                      # Minimum pitch offset percentage
+    max: 15                       # Maximum pitch offset percentage
+
+# Speaker Personality Trait Distributions
+speaker_personality_distributions:
+  laughter_frequency:
+    mean: 0.15      # Average probability of laughing
+    std: 0.08       # Standard deviation (some speakers laugh more/less)
+  
+  agreement_frequency:
+    mean: 0.25      # Average probability of agreement sounds (mm-hmm, yeah)
+    std: 0.10
+  
+  verbosity:          # Phrase length multiplier
+    mean: 1.0       # Average verbosity
+    std: 0.2        # Some speakers are more/less talkative
+    min: 0.7        # Minimum multiplier
+    max: 1.4        # Maximum multiplier
+  
+  pause_tendency:     # Pause length multiplier
+    mean: 1.0       # Average pause tendency
+    std: 0.15       # Some speakers pause more/less
+    min: 0.7
+    max: 1.3
+
+# Pause/Break Distributions
+breaks:
+  micro_pause:       # Small pauses within phrases
+    mean: 0.3
+    std: 0.1
+    min: 0.1
+    max: 0.6
+  
+  comma_pause:       # Natural comma pauses
+    mean: 0.4
+    std: 0.15
+    min: 0.2
+    max: 0.7
+  
+  thinking_pause:    # Longer thoughtful pauses
+    mean: 0.8
+    std: 0.3
+    min: 0.4
+    max: 1.5
+
+# Conversation Settings
+conversation:
+  num_clips: 20                    # Number of individual clips to generate
+  pause_distribution:               # Pauses between speakers
+    mean: 1.2
+    std: 0.5
+    min: 0.5
+    max: 3.0
+
+# Emphasis Settings
+emphasis:
+  probability: 0.3                 # 30% chance of emphasizing a word
+  levels: ["moderate", "strong", "reduced"]
+  level_weights: [0.6, 0.2, 0.2]   # Probabilities for each level
+
+# Special Prosody for Utterance Types
+utterance_types:
+  question:
+    pitch_boost: 15        # Questions get higher pitch
+    rate_factor: 1.05      # Slightly faster
+  
+  agreement:
+    volume: "soft"
+    rate_factor: 0.9       # Slightly slower
+  
+  thinking:
+    rate_factor: 0.85      # Slower, contemplative
+    pause_before: 0.6      # Pause before thinking sounds
+  
+  laughter:
+    volume: "soft"
+    rate_factor: 1.1       # Slightly faster
+
+# Agreement/Reaction Sounds
+agreement_sounds:
+  - "mm-hmm"
+  - "mhm"
+  - "yeah"
+  - "uh-huh"
+  - "right"
+  - "sure"
+  - "okay"
+  - "yes"
+
+# Laughter Sounds (in invented language style)
+laughter_sounds:
+  - "ha ha"
+  - "he he"
+  - "hehe"
+  - "haha"
+  - "ah ha"
+
+# Thinking Sounds
+thinking_sounds:
+  - "hmm"
+  - "uh"
+  - "um"
+  - "ah"
+  - "oh"
+
+# Audio Processing Settings
+audio:
+  fade_duration_ms: 20       # Fade in/out (currently disabled - causes audio corruption)
+  output_format: "mp3_22050_32"  # Optimized for sleep soundscapes (smaller files)
+  sample_rate: 22050         # Half of CD quality, perfect for speech
+
+# Output Paths
+paths:
+  output_dir: "output"
+  clips_dir: "output/clips"
+  merged_file: "output/conversation.mp3"
+  spatialized_file: "output/soundscape_3d.mp3"
+
+# Spatialization Settings (for spatialize_audio.py)
+spatialization:
+  num_layers: 3              # Number of overlapping conversation layers
+  stereo_positions:          # Pan positions for each layer (-1 = left, 1 = right)
+    - -0.6                   # Left-ish
+    - 0.0                    # Center
+    - 0.5                    # Right-ish
+  volume_adjustments:        # Volume for each layer (0.0-1.0)
+    - 0.7
+    - 0.8
+    - 0.6
+  time_offsets:              # Start time offset for each layer (seconds)
+    - 0.0
+    - 5.0
+    - 12.0

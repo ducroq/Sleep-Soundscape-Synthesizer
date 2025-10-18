@@ -1,0 +1,5 @@
+requests>=2.31.0
+simpleaudio>=1.0.4
+
+# Optional - for merging audio files
+pydub>=0.25.1
