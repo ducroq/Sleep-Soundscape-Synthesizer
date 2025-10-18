@@ -12,41 +12,37 @@ from typing import List, Dict, Any, Optional
 class LanguageGenerator:
     """Generates invented language phrases based on phonological softness."""
 
-    def __init__(self, softness: float = 0.7, config: Optional[Dict[str, Any]] = None):
+    def __init__(self, softness: float = 0.7, config: Dict[str, Any] = None):
         """
         Initialize the language generator.
 
         Args:
             softness: 0.0-1.0, controls phoneme selection (higher = softer sounds)
-            config: Optional configuration dictionary. If None, uses hardcoded defaults.
+            config: Configuration dictionary from config_loader.
         """
         self.softness = max(0.0, min(1.0, softness))
-        self.config = config or {}
+        self.config = config
 
-        # Get phonemes from config or use hardcoded defaults (backward compatibility)
-        phonemes = self.config.get('language', {}).get('phonemes', {})
+        # Get phonemes from config (validated by config_loader)
+        phonemes = self.config['language']['phonemes']
 
         # Consonants ranked by softness (Romance language influenced)
-        self.soft_consonants = phonemes.get('soft_consonants',
-            ['l', 'm', 'n', 'r', 'v', 'j', 'w'])
-        self.medium_consonants = phonemes.get('medium_consonants',
-            ['b', 'd', 'f', 's', 'z'])
-        self.hard_consonants = phonemes.get('hard_consonants',
-            ['p', 't', 'k', 'g', 'ch', 'sh'])
+        self.soft_consonants = phonemes['soft_consonants']
+        self.medium_consonants = phonemes['medium_consonants']
+        self.hard_consonants = phonemes['hard_consonants']
 
         # Vowels (inherently soft)
-        self.vowels = phonemes.get('vowels',
-            ['a', 'e', 'i', 'o', 'u', 'ai', 'au', 'ea', 'ia', 'io'])
+        self.vowels = phonemes['vowels']
 
         # Build weighted consonant list based on softness
         self._build_consonant_pool()
     
     def _build_consonant_pool(self):
         """Build a weighted pool of consonants based on softness parameter."""
-        # Get consonant weighting ratios from config or use defaults
-        weighting = self.config.get('language', {}).get('consonant_weighting', {})
-        medium_ratio = weighting.get('medium_ratio', 0.6)
-        hard_ratio = weighting.get('hard_ratio', 0.4)
+        # Get consonant weighting ratios from config (validated by config_loader)
+        weighting = self.config['language']['consonant_weighting']
+        medium_ratio = weighting['medium_ratio']
+        hard_ratio = weighting['hard_ratio']
 
         soft_weight = self.softness
         medium_weight = (1.0 - self.softness) * medium_ratio
@@ -73,11 +69,11 @@ class LanguageGenerator:
         Returns:
             A nonsense word
         """
-        # Get syllable structure probabilities from config or use defaults
-        syllable_structure = self.config.get('language', {}).get('syllable_structure', {})
-        onset_probability = syllable_structure.get('onset_probability', 0.7)
-        onset_first_syllable = syllable_structure.get('onset_first_syllable', 1.0)
-        coda_probability = syllable_structure.get('coda_probability', 0.3)
+        # Get syllable structure probabilities from config (validated by config_loader)
+        syllable_structure = self.config['language']['syllable_structure']
+        onset_probability = syllable_structure['onset_probability']
+        onset_first_syllable = syllable_structure['onset_first_syllable']
+        coda_probability = syllable_structure['coda_probability']
 
         num_syllables = random.randint(min_length, max_length)
         word = ""
@@ -147,7 +143,6 @@ class LanguageGenerator:
     
     def generate_agreement(self) -> str:
         """Generate an agreement sound."""
-        # Try to get from config first, fall back to hardcoded
         agreements = self.config.get('agreement_sounds', [
             "mm-hmm", "mhm", "yeah", "uh-huh",
             "right", "sure", "okay", "yes"
@@ -156,7 +151,6 @@ class LanguageGenerator:
 
     def generate_laughter(self) -> str:
         """Generate laughter sounds."""
-        # Try to get from config first, fall back to hardcoded
         laughs = self.config.get('laughter_sounds', [
             "ha ha", "he he", "hehe", "haha", "ah ha"
         ])
@@ -164,7 +158,6 @@ class LanguageGenerator:
 
     def generate_thinking(self) -> str:
         """Generate thinking sounds."""
-        # Try to get from config first, fall back to hardcoded
         thinks = self.config.get('thinking_sounds', [
             "hmm", "uh", "um", "ah", "oh"
         ])
@@ -187,15 +180,15 @@ def generate_utterance(
     Returns:
         Tuple of (text, utterance_type)
     """
-    lang_config = config.get('language', {})
+    lang_config = config['language']
 
-    # Get utterance type probabilities from config or use defaults
-    type_probs = config.get('utterance_type_probabilities', {})
-    thinking_prob = type_probs.get('thinking', 0.05)
-    agreement_prob = type_probs.get('agreement', 0.10)
-    laughter_prob = type_probs.get('laughter', 0.05)
-    question_prob = type_probs.get('question', 0.15)
-    # normal_prob = type_probs.get('normal', 0.65)  # Remainder
+    # Get utterance type probabilities from config (validated by config_loader)
+    type_probs = config['utterance_type_probabilities']
+    thinking_prob = type_probs['thinking']
+    agreement_prob = type_probs['agreement']
+    laughter_prob = type_probs['laughter']
+    question_prob = type_probs['question']
+    # normal_prob = type_probs['normal']  # Remainder
 
     # Calculate cumulative probabilities
     thinking_threshold = thinking_prob
@@ -215,15 +208,15 @@ def generate_utterance(
         return generator.generate_laughter(), 'laughter'
     elif rand < question_threshold:
         text = generator.generate_question(
-            lang_config.get('min_phrase_length', 3),
-            lang_config.get('max_phrase_length', 12),
+            lang_config['min_phrase_length'],
+            lang_config['max_phrase_length'],
             verbosity_multiplier
         )
         return text, 'question'
     else:  # Normal statements (remainder)
         text = generator.generate_phrase(
-            lang_config.get('min_phrase_length', 3),
-            lang_config.get('max_phrase_length', 12),
+            lang_config['min_phrase_length'],
+            lang_config['max_phrase_length'],
             verbosity_multiplier
         )
         return text, 'normal'
@@ -231,17 +224,19 @@ def generate_utterance(
 
 if __name__ == "__main__":
     # Test the language generator
+    import sys
+    from pathlib import Path
+
+    # Add project root to path
+    project_root = Path(__file__).parent.parent.parent
+    sys.path.insert(0, str(project_root))
+
     from src.utils.config_loader import load_config
 
-    # Test with config
-    try:
-        config = load_config()
-        print("Testing with config from config/config.yaml")
-        gen = LanguageGenerator(softness=0.7, config=config)
-    except Exception as e:
-        print(f"Could not load config: {e}")
-        print("Testing with hardcoded defaults")
-        gen = LanguageGenerator(softness=0.7)
+    # Load config (required)
+    config = load_config()
+    print("Testing with config from config/config.yaml")
+    gen = LanguageGenerator(softness=0.7, config=config)
 
     print("\nSample words:")
     for _ in range(5):

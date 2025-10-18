@@ -20,7 +20,7 @@ def call_elevenlabs_tts(
     similarity_boost: float = 0.75,
     style: float = 0.0,
     use_speaker_boost: bool = True,
-    config: Optional[Dict[str, Any]] = None
+    config: Dict[str, Any] = None
 ) -> bytes:
     """
     Call ElevenLabs TTS API to generate speech.
@@ -35,7 +35,7 @@ def call_elevenlabs_tts(
         similarity_boost: Similarity boost (0.0-1.0)
         style: Style exaggeration (0.0-1.0)
         use_speaker_boost: Enable speaker boost
-        config: Optional configuration dictionary
+        config: Configuration dictionary from config_loader
 
     Returns:
         Raw audio bytes (MP3)
@@ -43,11 +43,8 @@ def call_elevenlabs_tts(
     Raises:
         Exception: If API call fails
     """
-    # Get API URL from config or use default
-    if config:
-        api_url = config.get('elevenlabs', {}).get('api_url', 'https://api.elevenlabs.io/v1/text-to-speech')
-    else:
-        api_url = 'https://api.elevenlabs.io/v1/text-to-speech'
+    # Get API URL from config (validated by config_loader)
+    api_url = config['elevenlabs']['api_url']
 
     url = f"{api_url}/{voice_id}"
     
@@ -174,16 +171,16 @@ def generate_speech(
     from src.utils.config_loader import load_secrets, get_elevenlabs_api_key
     api_key = get_elevenlabs_api_key()
     
-    # Get model settings
-    model_id = config['elevenlabs'].get('model_id', 'eleven_multilingual_v2')
-    output_format = config['audio'].get('output_format', 'mp3_44100_128')
+    # Get model settings from config (validated by config_loader)
+    model_id = config['elevenlabs']['model_id']
+    output_format = config['audio']['output_format']
 
-    # Get voice settings from config or use defaults
-    voice_settings = config.get('elevenlabs', {}).get('voice_settings', {})
-    stability = voice_settings.get('stability', 0.5)
-    similarity_boost = voice_settings.get('similarity_boost', 0.75)
-    style = voice_settings.get('style', 0.0)
-    use_speaker_boost = voice_settings.get('use_speaker_boost', True)
+    # Get voice settings from config (validated by config_loader)
+    voice_settings = config['elevenlabs']['voice_settings']
+    stability = voice_settings['stability']
+    similarity_boost = voice_settings['similarity_boost']
+    style = voice_settings['style']
+    use_speaker_boost = voice_settings['use_speaker_boost']
 
     # Call API
     audio_bytes = call_elevenlabs_tts(
@@ -201,7 +198,7 @@ def generate_speech(
     
     # Apply fading if requested (disabled by default - causes audio corruption)
     if apply_fading:
-        fade_duration_ms = config['audio'].get('fade_duration_ms', 20)
+        fade_duration_ms = config['audio']['fade_duration_ms']
         temp_dir = os.path.dirname(output_path) or "."
         audio_bytes = apply_fade(audio_bytes, fade_duration_ms, temp_dir)
     

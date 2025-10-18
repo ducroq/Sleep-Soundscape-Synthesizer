@@ -19,7 +19,9 @@
    # (copy from config/secrets.ini.example and fill in your key)
    ```
 
-## Generate Your Soundscape (Option A: Archive Scripts - Easiest)
+## Generate Your Soundscape (Option A: Archive Scripts - Legacy)
+
+**Note:** These scripts are frozen for backward compatibility. For new development, use the modular src/ structure (Option B).
 
 ```bash
 # From project root
@@ -36,6 +38,8 @@ python spatialize_audio.py
 
 cd ..
 ```
+
+See [archive/README.md](../archive/README.md) for more information about the legacy scripts.
 
 ## Generate Your Soundscape (Option B: New Modular Structure)
 

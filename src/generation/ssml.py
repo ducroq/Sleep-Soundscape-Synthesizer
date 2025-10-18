@@ -75,9 +75,8 @@ def add_pauses_to_text(text: str, personality: SpeakerPersonality) -> str:
     Returns:
         Text with break tags
     """
-    # Get micro pause probability from config or use default
-    micro_pause_config = personality.config.get('breaks', {}).get('micro_pause', {})
-    micro_pause_probability = micro_pause_config.get('probability', 0.2)
+    # Get micro pause probability from config (validated by config_loader)
+    micro_pause_probability = personality.config['breaks']['micro_pause']['probability']
 
     # Add micro pauses between some words
     words = text.split()
@@ -169,18 +168,19 @@ def generate_simple_ssml(text: str, rate: float = 0.85, pitch: int = 0, volume: 
 
 if __name__ == "__main__":
     # Test SSML generation
-    import yaml
-    from src.generation.personality import SpeakerPersonality, get_default_config
-    from src.utils.config_loader import get_project_root
-    
-    # Load or create config
-    try:
-        config_path = get_project_root() / "config" / "config.yaml"
-        with open(config_path, 'r') as f:
-            config = yaml.safe_load(f)
-    except FileNotFoundError:
-        config = get_default_config()
-    
+    import sys
+    from pathlib import Path
+
+    # Add project root to path
+    project_root = Path(__file__).parent.parent.parent
+    sys.path.insert(0, str(project_root))
+
+    from src.generation.personality import SpeakerPersonality
+    from src.utils.config_loader import load_config
+
+    # Load config (required)
+    config = load_config()
+
     # Create a test personality
     personality = SpeakerPersonality("test_voice", config)
     

@@ -76,7 +76,9 @@ api_key = your_elevenlabs_api_key_here
 
 ### 3. Generate Soundscape
 
-**Option A: Using Archive Scripts (Legacy - Simpler)**
+**Option A: Using Archive Scripts (Legacy)**
+
+**Note:** These scripts are frozen for backward compatibility. For new development, use the modular src/ structure.
 
 ```bash
 # From project root
@@ -87,7 +89,9 @@ python spatialize_audio.py     # Create 3D soundscape (10 sec)
 cd ..
 ```
 
-**Option B: Using New Modular Structure (Recommended for Development)**
+See [archive/README.md](archive/README.md) for more details.
+
+**Option B: Using New Modular Structure (Recommended)**
 
 ```bash
 # From project root - using new src/ modules

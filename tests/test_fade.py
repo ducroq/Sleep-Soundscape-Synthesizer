@@ -24,7 +24,7 @@ print("=" * 70)
 config = load_config()
 
 # Initialize
-lang_gen = LanguageGenerator(softness=config['language']['softness'])
+lang_gen = LanguageGenerator(softness=config['language']['softness'], config=config)
 voices = config['voices']
 personalities = initialize_speaker_personalities(voices, config)
 

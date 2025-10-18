@@ -64,11 +64,11 @@ for i in range(3):
     try:
         success = generate_speech(ssml, voice_id, output_path, config, prosody=prosody)
         if success:
-            print(f"    ✓ Saved to: {output_path}")
+            print(f"    [OK] Saved to: {output_path}")
         else:
-            print(f"    ✗ Failed (returned False)")
+            print(f"    [FAIL] Failed (returned False)")
     except Exception as e:
-        print(f"    ✗ ERROR: {e}")
+        print(f"    [FAIL] ERROR: {e}")
         import traceback
         traceback.print_exc()
     

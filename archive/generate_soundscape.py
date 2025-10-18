@@ -52,7 +52,7 @@ def generate_soundscape(config_path: str = "config.yaml"):
     
     # Initialize language generator
     print("\n[2/6] Initializing language generator...")
-    lang_gen = LanguageGenerator(softness=softness)
+    lang_gen = LanguageGenerator(softness=softness, config=config)
     
     # Initialize speaker personalities
     print("\n[3/6] Sampling speaker personalities...")

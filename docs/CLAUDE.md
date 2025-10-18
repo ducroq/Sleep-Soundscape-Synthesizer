@@ -10,7 +10,10 @@ Sleep Soundscape Synthesizer creates continuous background chatter in an invente
 
 ### Generate Soundscape (Full Pipeline)
 
-**Using Archive Scripts (Legacy - Still Working):**
+**Using Archive Scripts (Legacy - Frozen):**
+
+**Note:** Archive scripts are frozen for backward compatibility. Use src/ modules for new development.
+
 ```bash
 # From project root
 cd archive
@@ -19,6 +22,8 @@ python merge_audio.py          # Merge into conversation (1 sec)
 python spatialize_audio.py     # Create 3D soundscape (10 sec)
 cd ..
 ```
+
+See [archive/README.md](../archive/README.md) for more information.
 
 **Using New Modular Structure:**
 ```bash
