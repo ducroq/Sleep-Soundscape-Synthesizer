@@ -1,7 +1,10 @@
-#!/usr/bin/env python3
 """
-Spatialize audio clips into overlapping conversation layers
-Now supports multichannel WAV output for Audacity editing
+Audio Spatialization Module
+Creates 3D spatial soundscapes from audio clips.
+
+Supports two output modes:
+- Stereo MP3: Ready-to-listen spatial mix with panning
+- Multichannel WAV: Individual layers for manual mixing in Audacity
 """
 
 import subprocess
@@ -263,92 +266,70 @@ def create_stereo_spatial_mix(clips_dir='output/clips', output_file='output/fina
         
         return False
 
-    # filter_parts = []
-    # input_files = []
-    
-    # for layer_idx in range(num_layers):
-    #     # Get clips for this layer based on settings
-    #     if reuse_clips:
-    #         # Each layer gets all clips in a different random order
-    #         layer_clips = all_clips.copy()
-    #         if shuffle:
-    #             random.seed(layer_idx * 12345)  # Deterministic but different per layer
-    #             random.shuffle(layer_clips)
-    #     else:
-    #         # Divide clips across layers (old behavior)
-    #         start_idx = layer_idx * clips_per_layer
-    #         end_idx = start_idx + clips_per_layer if layer_idx < num_layers - 1 else len(all_clips)
-    #         layer_clips = all_clips[start_idx:end_idx]
-    #         if shuffle:
-    #             random.seed(layer_idx * 12345)
-    #             random.shuffle(layer_clips)
-        
-    #     position = stereo_positions[layer_idx]
-    #     volume = volume_adjustments[layer_idx]
-    #     time_offset = time_offsets[layer_idx]
-        
-    #     logger.info(f"Layer {layer_idx + 1}: {len(layer_clips)} clips, position={position:.1f}, volume={volume:.1f}, offset={time_offset:.1f}s")
-        
-    #     # Concatenate clips for this layer
-    #     concat_inputs = []
-    #     for clip_idx, clip in enumerate(layer_clips):
-    #         clip_path = os.path.join(clips_dir, clip)
-    #         input_files.append(clip_path)
-    #         file_idx = len(input_files) - 1
-    #         concat_inputs.append(f"[{file_idx}:a]")
-        
-    #     concat_filter = f"{''.join(concat_inputs)}concat=n={len(layer_clips)}:v=0:a=1[layer{layer_idx}]"
-    #     filter_parts.append(concat_filter)
-        
-    #     # Apply delay if needed
-    #     if time_offset > 0:
-    #         delay_ms = int(time_offset * 1000)
-    #         filter_parts.append(f"[layer{layer_idx}]adelay={delay_ms}|{delay_ms}[layer{layer_idx}_delayed]")
-    #         current_stream = f"layer{layer_idx}_delayed"
-    #     else:
-    #         current_stream = f"layer{layer_idx}"
-        
-    #     # Apply stereo panning and volume
-    #     filter_parts.append(
-    #         f"[{current_stream}]"
-    #         f"volume={volume},"
-    #         f"stereotools=mlev=1:mpan={position}"
-    #         f"[layer{layer_idx}_final]"
-    #     )
-    
-    # # Mix all layers together
-    # mix_inputs = ''.join([f"[layer{i}_final]" for i in range(num_layers)])
-    # filter_parts.append(f"{mix_inputs}amix=inputs={num_layers}:duration=longest[out]")
-    
-    # # Join all filter parts
-    # filter_complex = ';'.join(filter_parts)
-    
-    # # Build ffmpeg command
-    # cmd = ['ffmpeg', '-y']
-    
-    # # Add all input files
-    # for input_file in input_files:
-    #     cmd.extend(['-i', input_file])
-    
-    # # Add filter complex
-    # cmd.extend([
-    #     '-filter_complex', filter_complex,
-    #     '-map', '[out]',
-    #     '-c:a', 'libmp3lame',
-    #     '-b:a', '32k',
-    #     '-ar', '22050',
-    #     output_file
-    # ])
-    
-    # logger.info("Running ffmpeg for stereo spatial mix...")
-    # try:
-    #     subprocess.run(cmd, check=True, capture_output=True, cwd=os.getcwd())
-    #     logger.info(f"✓ Stereo spatial mix created: {output_file}")
-    #     return True
-    # except subprocess.CalledProcessError as e:
-    #     logger.error(f"Error creating stereo spatial mix: {e}")
-    #     logger.error(f"stderr: {e.stderr.decode() if e.stderr else 'None'}")
-    #     return False
+
+def create_spatial_soundscape(config: dict, verbose: bool = True) -> str:
+    """
+    Create 3D spatialized soundscape (wrapper for pipeline integration).
+
+    This is the main entry point called by the unified pipeline.
+    Creates a stereo MP3 spatial mix from the merged conversation file.
+
+    Args:
+        config: Configuration dictionary from config_loader
+        verbose: Whether to print progress messages
+
+    Returns:
+        Path to the spatialized output file
+    """
+    clips_dir = config['paths']['clips_dir']
+    output_file = config['paths']['spatialized_file']
+
+    if verbose:
+        print(f"\n[Spatial Soundscape]")
+        print(f"  Input: {clips_dir}")
+        print(f"  Output: {output_file}")
+
+    # Use the stereo spatial mix function
+    success = create_stereo_spatial_mix(
+        clips_dir=clips_dir,
+        output_file=output_file,
+        config=config,
+        shuffle=None,  # Use config defaults
+        reuse_clips=None  # Use config defaults
+    )
+
+    if not success:
+        raise Exception("Spatialization failed")
+
+    return output_file
+
+
+def spatialize_audio(config_path: str = "config.yaml"):
+    """
+    Create 3D spatialized soundscape (legacy wrapper for archive scripts).
+
+    This maintains backward compatibility with archive/spatialize_audio.py
+    """
+    print("=" * 60)
+    print("Audio Spatialization - Creating 3D Soundscape")
+    print("=" * 60)
+
+    # Load configuration
+    print("\n[1/2] Loading configuration...")
+    config = load_config(config_path)
+
+    # Create spatial soundscape
+    print("\n[2/2] Creating spatial soundscape...")
+    try:
+        output_file = create_spatial_soundscape(config, verbose=True)
+        print(f"\n[OK] Success!")
+        print(f"  Output: {output_file}")
+        print("\nYour 3D soundscape is ready!")
+        print("  Listen with headphones for best spatial effect 🎧")
+        print("\n" + "=" * 60)
+    except Exception as e:
+        print(f"\n[ERROR] {e}")
+        raise
 
 
 def create_multichannel_wav(clips_dir='output/clips', output_file='output/final/soundscape_multichannel.wav', config=None, shuffle=None, reuse_clips=None):

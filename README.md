@@ -41,8 +41,9 @@ Utilities (src/utils/):
 - logger.py        → Consistent logging across modules
 ```
 
-**Pipeline** (Phase 2 - coming soon):
+**Pipeline** (Phase 2 - ✅ Complete):
 - `src/pipeline/main.py` → Single command to run entire pipeline
+- `src/pipeline/clip_generator.py` → Clip generation orchestrator
 
 See **[ARCHITECTURE.md](docs/ARCHITECTURE.md)** for detailed documentation.
 
@@ -65,6 +66,17 @@ pip install -r requirements.txt
 
 Create a `config/secrets.ini` file with your ElevenLabs API key:
 
+**Windows:**
+```bash
+# Copy the example file
+copy config\secrets.ini.example config\secrets.ini
+
+# Then edit config/secrets.ini and add your key:
+[elevenlabs]
+api_key = your_elevenlabs_api_key_here
+```
+
+**Mac/Linux:**
 ```bash
 # Copy the example file
 cp config/secrets.ini.example config/secrets.ini
@@ -76,7 +88,7 @@ api_key = your_elevenlabs_api_key_here
 
 ### 3. Generate Soundscape
 
-**✨ NEW: Unified Pipeline (Recommended)**
+**✨ Unified Pipeline (Recommended - Phase 2 Complete)**
 
 ```bash
 # From project root - one command for everything!
@@ -91,9 +103,9 @@ python -m src.pipeline.main --skip-spatial      # Generate + merge (no 3D)
 python -m src.pipeline.main --help
 ```
 
-**Option B: Using Archive Scripts (Legacy)**
+**Legacy Option: Using Archive Scripts**
 
-**Note:** These scripts are frozen for backward compatibility. Use the unified pipeline above for new work.
+**Note:** These scripts are frozen for backward compatibility. The unified pipeline above is recommended for all new work.
 
 ```bash
 # From project root
@@ -199,7 +211,7 @@ utterance_types:
 
 ### At Session Start
 
-When you run `generate_soundscape.py`, the system:
+When you run `python -m src.pipeline.main`, the system:
 
 1. **Samples base traits** for each voice from distributions
    - Example: Voice A might get `verbosity=1.3` (talkative), Voice B gets `verbosity=0.8` (concise)
@@ -248,8 +260,9 @@ sleep-soundscape-synthesizer/
 │   ├── utils/                    # Utilities
 │   │   ├── config_loader.py
 │   │   └── logger.py
-│   └── pipeline/                 # Main pipeline (Phase 2)
-│       └── (main.py - coming soon)
+│   └── pipeline/                 # Main pipeline (Phase 2 ✅)
+│       ├── main.py               # Unified CLI entry point
+│       └── clip_generator.py     # Clip generation orchestrator
 │
 ├── tests/                         # Test files
 │   ├── test_personalities.py
@@ -443,11 +456,20 @@ python -m pytest tests/ -v
 
 ### Generating Multiple Variants
 
+**Windows (PowerShell):**
+```powershell
+# Generate 3 different soundscapes
+for ($i=1; $i -le 3; $i++) {
+    python -m src.pipeline.main
+    Move-Item output\soundscape_3d.mp3 output\soundscape_$i.mp3
+}
+```
+
+**Mac/Linux:**
 ```bash
 # Generate 3 different soundscapes
 for i in {1..3}; do
-    python generate_soundscape.py
-    python spatialize_audio.py
+    python -m src.pipeline.main
     mv output/soundscape_3d.mp3 output/soundscape_${i}.mp3
 done
 ```

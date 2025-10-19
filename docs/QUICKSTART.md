@@ -21,7 +21,7 @@
 
 ## Generate Your Soundscape
 
-**✨ NEW: Unified Pipeline (Recommended)**
+**✨ Unified Pipeline (Recommended - Phase 2 Complete)**
 
 ```bash
 # From project root - one command does everything!
@@ -43,7 +43,7 @@ python -m src.pipeline.main --help
 
 ## Alternative: Archive Scripts (Legacy)
 
-**Note:** These scripts are frozen for backward compatibility. Use the unified pipeline above.
+**Note:** These scripts are frozen for backward compatibility. The unified pipeline above is recommended for all new work.
 
 ```bash
 # From project root
@@ -129,8 +129,16 @@ spatialization:
 - Make sure you have Python 3.10+ installed
 - Reinstall dependencies: `pip install -r requirements.txt`
 
-## What's New (Phase 1 Complete)
+## What's New
 
+**Phase 2 Complete (Unified Pipeline):**
+✅ **Single Command Workflow** - One command does everything: `python -m src.pipeline.main`
+✅ **CLI Options** - Flexible flags: --clips, --skip-merge, --skip-spatial, --help
+✅ **Progress Tracking** - Verbose output shows each pipeline stage
+✅ **Better Error Handling** - Clear exceptions and error messages
+✅ **Modular Design** - Clean separation of clip generation, merging, and spatialization
+
+**Phase 1 Complete (Modular Architecture):**
 ✅ **Modular Structure** - All code organized in `src/` directory
 ✅ **Config Validation** - Comprehensive validation with helpful error messages
 ✅ **Centralized Config** - All settings in `config/config.yaml`
