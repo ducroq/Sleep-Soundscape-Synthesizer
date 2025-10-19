@@ -233,6 +233,9 @@ paths:
 # Spatialization Settings (for spatialize_audio.py)
 spatialization:
   num_layers: 7              # Number of overlapping conversation layers
+  shuffle_clips: true              # Randomize clips for variety
+  reuse_clips: true                # Use all clips per layer (longer)
+  target_duration_minutes: 30      # Auto-repeat clips to reach 30 minutes
   stereo_positions:          # Pan positions for each layer (-1 = left, 1 = right)
     - -0.8                   # Left-most
     - -0.6                   # Left-ish
