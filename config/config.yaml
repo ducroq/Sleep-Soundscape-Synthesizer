@@ -33,23 +33,43 @@ language:
   min_word_length: 2
   max_word_length: 5
 
-  # Phoneme definitions (Romance language-inspired)
+  # Phoneme definitions (Romance language-inspired with full orthographic markers)
   phonemes:
     # Sonorants and liquids (characteristic Romance sounds)
-    soft_consonants: ['l', 'm', 'n', 'r', 'y', 'll', 'ñ', 'nh', 'gn']
+    soft_consonants: ['l', 'm', 'n', 'r', 'y', 'll', 'ñ', 'nh', 'lh', 'gn']
 
-    # Voiced stops and fricatives
-    medium_consonants: ['b', 'd', 'f', 's', 'z', 'v']
+    # Voiced stops and fricatives (including trilled r)
+    medium_consonants: ['b', 'd', 'f', 's', 'z', 'v', 'rr']
 
-    # Voiceless stops and special Romance consonants
-    hard_consonants: ['p', 't', 'k', 'g', 'c', 'ç']
+    # Voiceless stops and special Romance consonants (ch for French)
+    hard_consonants: ['p', 't', 'k', 'g', 'c', 'ç', 'ch']
 
-    # Vowels with authentic Romance diphthongs
+    # Vowels with full Romance orthography (accents, nasals, diphthongs)
     vowels: [
       # Simple vowels
       'a', 'e', 'i', 'o', 'u',
-      # Common diphthongs (Spanish, Portuguese, French, Italian)
+
+      # French accented vowels
+      'é', 'è', 'ê', 'ë',
+      'à', 'â',
+      'ô',
+      'ù', 'û', 'ü',
+
+      # Spanish/Portuguese accented vowels
+      'á', 'í', 'ó', 'ú',
+
+      # Portuguese nasal vowels (written with til)
+      'ã', 'õ',
+
+      # Common oral diphthongs
       'ai', 'au', 'ei', 'eu', 'oi', 'ou',
+
+      # Portuguese nasal diphthongs
+      'ão', 'õe', 'ãe',
+
+      # French nasal vowel combinations (written as digraphs)
+      'an', 'en', 'in', 'on', 'un',
+
       # Rising diphthongs
       'ia', 'ie', 'io', 'iu',
       'ua', 'ue', 'ui', 'uo'

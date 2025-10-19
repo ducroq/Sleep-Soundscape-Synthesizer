@@ -274,13 +274,21 @@ sleep-soundscape-synthesizer/
 
 ### Phoneme Customization
 
-The phonemes are designed to sound like Romance languages (Spanish, French, Italian, Portuguese):
+The phonemes use **full Romance language orthography** (Spanish, French, Italian, Portuguese) with accents and special characters that ElevenLabs will pronounce correctly:
 
 **Current phonemes include:**
-- **Soft consonants**: l, m, n, r, y, ll (Spanish), ñ (Spanish), nh (Portuguese), gn (Italian/French)
-- **Medium consonants**: b, d, f, s, z, v
-- **Hard consonants**: p, t, k, g, c, ç (Portuguese/French)
-- **Vowels & diphthongs**: a, e, i, o, u, ai, au, ei, eu, oi, ou, ia, ie, io, iu, ua, ue, ui, uo
+- **Soft consonants**: l, m, n, r, y, ll (Spanish), ñ (Spanish), nh (Portuguese), lh (Portuguese), gn (Italian/French)
+- **Medium consonants**: b, d, f, s, z, v, rr (Portuguese/Spanish trilled r)
+- **Hard consonants**: p, t, k, g, c, ç (Portuguese/French), ch (French)
+- **Vowels**:
+  - Simple: a, e, i, o, u
+  - **French accents**: é, è, ê, ë, à, â, ô, ù, û, ü
+  - **Spanish/Portuguese accents**: á, í, ó, ú
+  - **Portuguese nasal**: ã, õ, ão, õe, ãe
+  - **French nasal**: an, en, in, on, un
+  - **Diphthongs**: ai, au, ei, eu, oi, ou, ia, ie, io, iu, ua, ue, ui, uo
+
+**Why accents matter**: ElevenLabs detects language patterns from orthography, so using `ã`, `é`, `ç` triggers authentic Portuguese/French pronunciation!
 
 You can adjust these in `config/config.yaml` to create different language flavors!
 
@@ -339,11 +347,15 @@ audio:
 ## 🔧 Technical Details
 
 ### Phonology (Authentic Romance Language Design)
-- **Romance language-inspired**: Spanish, French, Italian, Portuguese phonetics
-- **Characteristic sounds**: ll, ñ, nh, gn, ç (authentic Romance digraphs)
-- **Rich diphthongs**: ai, au, ei, eu, oi, ou, ia, ie, io, iu, ua, ue, ui, uo
+- **Full Romance orthography**: Complete accent marks, nasal vowels, and special characters
+- **ElevenLabs language detection**: Uses orthographic cues (é, ã, ç, etc.) to trigger correct pronunciation
+- **Characteristic consonants**: ll, ñ, nh, lh, gn, rr, ç, ch (authentic Romance digraphs)
+- **French elements**: é, è, ê, à, ô, an, en, in, on, un, ch
+- **Portuguese elements**: ã, õ, ão, õe, lh, nh, rr, ç
+- **Spanish elements**: ll, ñ, á, í, ó, ú
+- **Italian elements**: gn, ia, ie, io
+- **Rich diphthongs**: 14+ combinations covering all Romance languages
 - **Soft consonants prioritized**: l, m, n, r, y (sonorants and liquids)
-- **No Germanic sounds**: Removed 'ch', 'sh', 'w', 'j' for authenticity
 - **Configurable softness parameter**: 0.0-1.0 controls consonant distribution
 
 ### SSML Features
