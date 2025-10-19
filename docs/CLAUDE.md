@@ -303,9 +303,20 @@ Into a single unified workflow: `python -m src.pipeline.main`
 
 ## Future Enhancements
 
-Potential improvements for future phases:
-- Real-time generation mode
-- Web interface for parameter tuning
+### High Priority
+- **Offline Neural TTS** - Add Piper/Coqui TTS as free, local alternative to ElevenLabs
+  - See detailed implementation plan: [docs/FUTURE_OFFLINE_TTS.md](FUTURE_OFFLINE_TTS.md)
+  - Benefits: Zero cost, offline operation, unlimited generation, privacy
+  - Estimated effort: 10-20 hours
+  - Break-even: ~50-100 soundscapes vs. ElevenLabs API costs
+
+### Medium Priority
+- Voice cloning - Personalize with custom voices
 - Emotion distributions (happy, tired, excited speakers)
 - Background ambience mixing (café sounds, rain, etc.)
+- Real-time generation mode
+
+### Low Priority
+- Web interface for parameter tuning
 - Dynamic pitch contours
+- Conversation topic clustering

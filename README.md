@@ -462,12 +462,24 @@ done
 
 ## 🔮 Future Enhancements
 
+### Planned Features
+- [ ] **Offline Neural TTS** - Free, local speech synthesis (Piper, Coqui TTS) - [See detailed plan](docs/FUTURE_OFFLINE_TTS.md)
+- [ ] Voice cloning - Personalize with your own voice
 - [ ] Emotion distributions (happy, tired, excited speakers)
 - [ ] Conversation topic clustering (speakers discuss related topics)
 - [ ] Dynamic pitch contours (rising/falling intonation patterns)
 - [ ] Background ambience mixing (café sounds, rain, etc.)
 - [ ] Real-time generation mode
 - [ ] Web interface
+
+### Why Offline TTS?
+Currently using ElevenLabs API (~$0.15-0.30 per soundscape). Offline models would provide:
+- ✅ Zero cost after setup
+- ✅ No internet required
+- ✅ Unlimited generation
+- ✅ Privacy (local processing)
+
+See **[docs/FUTURE_OFFLINE_TTS.md](docs/FUTURE_OFFLINE_TTS.md)** for complete implementation plan.
 
 ## 📄 License
 

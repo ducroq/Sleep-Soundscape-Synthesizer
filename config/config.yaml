@@ -93,14 +93,14 @@ prosody_distributions:
   rate:
     base_mean: 0.85               # Center point for all speakers
     per_speaker_variation: 0.10   # How different speakers are from each other
-    per_utterance_variation: 0.03 # How much one speaker varies per utterance
+    per_utterance_variation: 0.1 # How much one speaker varies per utterance
     min: 0.70
     max: 1.00
   
   pitch:
     base: "medium"                # Base reference
     per_speaker_variation: 8      # ±8% per speaker from base
-    per_utterance_variation: 3    # ±3% per utterance variation
+    per_utterance_variation: 5    # ±5% per utterance variation
     min: -15                      # Minimum pitch offset percentage
     max: 15                       # Maximum pitch offset percentage
 
@@ -149,7 +149,7 @@ breaks:
 
 # Conversation Settings
 conversation:
-  num_clips: 20                    # Number of individual clips to generate
+  num_clips: 50                    # Number of individual clips to generate
   pause_distribution:               # Pauses between speakers
     mean: 1.2
     std: 0.5
@@ -232,16 +232,30 @@ paths:
 
 # Spatialization Settings (for spatialize_audio.py)
 spatialization:
-  num_layers: 3              # Number of overlapping conversation layers
+  num_layers: 7              # Number of overlapping conversation layers
   stereo_positions:          # Pan positions for each layer (-1 = left, 1 = right)
+    - -0.8                   # Left-most
     - -0.6                   # Left-ish
+    - -0.4                   # Left-center
     - 0.0                    # Center
+    - 0.3                    # Slightly right
     - 0.5                    # Right-ish
+    - 0.8                    # Right-most
+    
   volume_adjustments:        # Volume for each layer (0.0-1.0)
+    - 0.9
+    - 0.8
+    - 0.75
+    - 1.0
     - 0.7
     - 0.8
     - 0.6
   time_offsets:              # Start time offset for each layer (seconds)
     - 0.0
+    - 3.0
     - 5.0
+    - 8.0
     - 12.0
+    - 15.0
+    - 20.0
+    
