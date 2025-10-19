@@ -6,7 +6,7 @@ A sophisticated sleep soundscape generator that creates continuous background ch
 
 Create soothing, comforting human presence without cognitive engagement—like café ambience—using invented language that sounds natural but doesn't form recognizable words.
 
-## ✨ New Feature: Probabilistic Speaker Personalities
+## ✨ Probabilistic Speaker Personalities
 
 Each speaker now has a unique, consistent personality sampled from probability distributions:
 
@@ -272,6 +272,18 @@ sleep-soundscape-synthesizer/
 
 ## 🎨 Customization Tips
 
+### Phoneme Customization
+
+The phonemes are designed to sound like Romance languages (Spanish, French, Italian, Portuguese):
+
+**Current phonemes include:**
+- **Soft consonants**: l, m, n, r, y, ll (Spanish), ñ (Spanish), nh (Portuguese), gn (Italian/French)
+- **Medium consonants**: b, d, f, s, z, v
+- **Hard consonants**: p, t, k, g, c, ç (Portuguese/French)
+- **Vowels & diphthongs**: a, e, i, o, u, ai, au, ei, eu, oi, ou, ia, ie, io, iu, ua, ue, ui, uo
+
+You can adjust these in `config/config.yaml` to create different language flavors!
+
 ### More Variation Between Speakers
 Increase `per_speaker_variation` values:
 ```yaml
@@ -326,11 +338,13 @@ audio:
 
 ## 🔧 Technical Details
 
-### Phonology
-- Romance language influenced (French, Italian, Spanish accents)
-- Soft consonants (l, m, n, r, v) prioritized
-- Open vowels for melodic flow
-- Configurable softness parameter (0.0-1.0)
+### Phonology (Authentic Romance Language Design)
+- **Romance language-inspired**: Spanish, French, Italian, Portuguese phonetics
+- **Characteristic sounds**: ll, ñ, nh, gn, ç (authentic Romance digraphs)
+- **Rich diphthongs**: ai, au, ei, eu, oi, ou, ia, ie, io, iu, ua, ue, ui, uo
+- **Soft consonants prioritized**: l, m, n, r, y (sonorants and liquids)
+- **No Germanic sounds**: Removed 'ch', 'sh', 'w', 'j' for authenticity
+- **Configurable softness parameter**: 0.0-1.0 controls consonant distribution
 
 ### SSML Features
 - Dynamic rate, pitch, volume per utterance via `<prosody>` tags

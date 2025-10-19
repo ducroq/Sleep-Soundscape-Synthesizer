@@ -167,7 +167,9 @@ The system uses a **probabilistic personality model** where each speaker has con
 All configuration in `config/config.yaml`:
 - `elevenlabs`: API settings (model_id, api_url, voice_settings)
 - `voices`: List of ElevenLabs voice IDs
-- `language`: Generation settings (softness, phonemes, syllable_structure, consonant_weighting)
+- `language`: Generation settings (softness, **authentic Romance phonemes**, syllable_structure, consonant_weighting)
+  - **Phonemes**: Authentic Romance language sounds (ll, ñ, nh, gn, ç) + rich diphthongs
+  - **No Germanic sounds**: Removed 'ch', 'sh', 'w', 'j' for authenticity
 - `prosody_distributions`: Rate/pitch variation parameters
 - `speaker_personality_distributions`: Trait distributions (laughter, agreement, verbosity, pause_tendency)
 - `breaks`: Pause duration distributions (micro, comma, thinking) with probabilities

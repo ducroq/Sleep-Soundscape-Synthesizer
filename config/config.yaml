@@ -33,14 +33,29 @@ language:
   min_word_length: 2
   max_word_length: 5
 
-  # Phoneme definitions (previously hardcoded in generate_language.py)
+  # Phoneme definitions (Romance language-inspired)
   phonemes:
-    soft_consonants: ['l', 'm', 'n', 'r', 'v', 'j', 'w']
-    medium_consonants: ['b', 'd', 'f', 's', 'z']
-    hard_consonants: ['p', 't', 'k', 'g', 'ch', 'sh']
-    vowels: ['a', 'e', 'i', 'o', 'u', 'ai', 'au', 'ea', 'ia', 'io']
+    # Sonorants and liquids (characteristic Romance sounds)
+    soft_consonants: ['l', 'm', 'n', 'r', 'y', 'll', 'ñ', 'nh', 'gn']
 
-  # Syllable structure probabilities (previously hardcoded in generate_language.py)
+    # Voiced stops and fricatives
+    medium_consonants: ['b', 'd', 'f', 's', 'z', 'v']
+
+    # Voiceless stops and special Romance consonants
+    hard_consonants: ['p', 't', 'k', 'g', 'c', 'ç']
+
+    # Vowels with authentic Romance diphthongs
+    vowels: [
+      # Simple vowels
+      'a', 'e', 'i', 'o', 'u',
+      # Common diphthongs (Spanish, Portuguese, French, Italian)
+      'ai', 'au', 'ei', 'eu', 'oi', 'ou',
+      # Rising diphthongs
+      'ia', 'ie', 'io', 'iu',
+      'ua', 'ue', 'ui', 'uo'
+    ]
+
+  # Syllable structure probabilities
   syllable_structure:
     onset_probability: 0.7       # 70% chance of initial consonant
     onset_first_syllable: 1.0    # First syllable always has onset (100%)
@@ -79,13 +94,13 @@ speaker_personality_distributions:
     mean: 0.25      # Average probability of agreement sounds (mm-hmm, yeah)
     std: 0.10
   
-  verbosity:          # Phrase length multiplier
+  verbosity:        # Phrase length multiplier
     mean: 1.0       # Average verbosity
     std: 0.2        # Some speakers are more/less talkative
     min: 0.7        # Minimum multiplier
     max: 1.4        # Maximum multiplier
   
-  pause_tendency:     # Pause length multiplier
+  pause_tendency:   # Pause length multiplier
     mean: 1.0       # Average pause tendency
     std: 0.15       # Some speakers pause more/less
     min: 0.7
@@ -159,12 +174,12 @@ utterance_types:
 agreement_sounds:
   - "mm-hmm"
   - "mhm"
-  - "yeah"
   - "uh-huh"
-  - "right"
-  - "sure"
-  - "okay"
-  - "yes"
+  # - "yeah"
+  # - "right"
+  # - "sure"
+  # - "okay"
+  # - "yes"
 
 # Laughter Sounds (in invented language style)
 laughter_sounds:
